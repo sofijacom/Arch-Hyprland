@@ -2,18 +2,23 @@
 
 ## 💌 ** Arch Hyprland Install Script ** 💌
 
-![GitHub Repo stars](https://img.shields.io/github/stars/JaKooLit/Arch-Hyprland?style=for-the-badge&color=cba6f7) ![GitHub last commit](https://img.shields.io/github/last-commit/JaKooLit/Arch-Hyprland?style=for-the-badge&color=b4befe) ![GitHub repo size](https://img.shields.io/github/repo-size/JaKooLit/Arch-Hyprland?style=for-the-badge&color=cba6f7)
+![GitHub Repo stars](https://img.shields.io/github/stars/JaKooLit/Arch-Hyprland?style=for-the-badge&color=cba6f7) ![GitHub last commit](https://img.shields.io/github/last-commit/JaKooLit/Arch-Hyprland?style=for-the-badge&color=b4befe) ![GitHub repo size](https://img.shields.io/github/repo-size/JaKooLit/Arch-Hyprland?style=for-the-badge&color=cba6f7) <a href="https://discord.gg/V2SJ92vbEN"> <img src="https://img.shields.io/discord/1151869464405606400?style=for-the-badge&logo=discord&color=cba6f7&link=https%3A%2F%2Fdiscord.gg%2V2SJ92vbEN"> </a>
 
 
 <br/>
 </div>
 
-#### Hyprland-Dots-showcase
+<h3 align="center">
+	<img src="https://github.com/JaKooLit/Telegram-Animated-Emojis/blob/main/Activity/Sparkles.webp" alt="Sparkles" width="38" height="38" />
+	KooL Hyprland-Dotfiles Showcase 
+	<img src="https://github.com/JaKooLit/Telegram-Animated-Emojis/blob/main/Activity/Sparkles.webp" alt="Sparkles" width="38" height="38" />
+</h3>
 
+<div align="center">
 
+https://github.com/JaKooLit/Hyprland-Dots/assets/85185940/50d53755-0f11-45d6-9913-76039e84a2cd
 
-https://github.com/JaKooLit/Arch-Hyprland/assets/85185940/84e3948f-edbf-45b8-9e3f-1f6699e3830a
-
+</div>
 
 ### Gallery and Videos
 <details>
@@ -123,6 +128,8 @@ source ~/.zshrc
 - [ ] possibly adding gruvbox themes, cursors, icons
 
 #### ⚠️ some known issues
+- if you install this script on a system or has an old rofi installed, make sure to install rofi-wayland to replace rofi. Else you will have issues with rofi
+
 - reports from members of my discord, states that some users of nvidia are getting stuck on sddm login. credit  to @Kenni Fix stated was 
 ```  
  while in sddm press ctrl+alt+F2 or F3
@@ -138,6 +145,11 @@ log into your account
 
 
 - installing of cava-git on a newly installed Arch makes the install keep hanging. Switched back to cava. After booting and logged in, if cava dont work, replace it cava-git `yay -S cava-git` or `paru -S cava-git` 
+
+> [!NOTE]
+> Auto start of Hyprland after login (no SDDM or GDM or any login managers)
+- This was disabled a few days ago. (19 May 2024). This was because some users, after they used the Distro-Hyprland scripts with other DE (gnome-wayland or plasma-wayland), if they choose to login into gnome-wayland for example, Hyprland is starting. 
+- to avoid this, I disabled it. You can re-enable again by editing `~/.zprofile` . Remove all the # on the first lines
 
 
 #### 🫥 Improving performance for Older Nvidia Cards using driver 470
