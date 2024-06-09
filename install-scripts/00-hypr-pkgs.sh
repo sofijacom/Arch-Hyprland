@@ -20,7 +20,8 @@ gvfs
 gvfs-mtp
 hypridle
 hyprlock
-imagemagick 
+imagemagick
+inxi 
 jq
 kitty
 kvantum
@@ -58,6 +59,7 @@ brightnessctl
 btop
 cava
 eog
+fastfetch
 gnome-system-monitor
 mousepad 
 mpv

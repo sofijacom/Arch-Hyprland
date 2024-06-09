@@ -7,6 +7,10 @@ labels: "custom"
 
 ## Custom Template
 
+### Before submitting report
+
+[Kindly review the log files in Install-Logs directory. Some apps may have not installed properly.]
+
 ### Description
 
 [Provide a clear and concise description of the issue or request.]
@@ -36,3 +40,10 @@ labels: "custom"
 ### Additional Information
 
 [Add any other information about the issue or request here. For example, you might include links to similar features in other projects, or screenshots or diagrams to help explain your idea.]
+
+### show output of `inxi -CGIsSMnr` install package `inxi` if not exist
+show output here
+```
+
+
+```
