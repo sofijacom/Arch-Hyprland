@@ -1,10 +1,44 @@
 #!/bin/bash
 # https://github.com/JaKooLit
 
+# Set some colors for output messages
+OK="$(tput setaf 2)[OK]$(tput sgr0)"
+ERROR="$(tput setaf 1)[ERROR]$(tput sgr0)"
+NOTE="$(tput setaf 3)[NOTE]$(tput sgr0)"
+WARN="$(tput setaf 5)[WARN]$(tput sgr0)"
+CAT="$(tput setaf 6)[ACTION]$(tput sgr0)"
+ORANGE=$(tput setaf 166)
+YELLOW=$(tput setaf 3)
+RESET=$(tput sgr0)
+
+
 # Check if running as root. If root, script will exit
 if [[ $EUID -eq 0 ]]; then
-    echo "This script should not be executed as root! Exiting......."
+    echo "$ERROR This script should not be executed as root! Exiting......."
     exit 1
+fi
+
+clear
+
+# Check if PulseAudio package is installed
+if pacman -Qq | grep -qw '^pulseaudio$'; then
+    echo "$ERROR PulseAudio is detected as installed. Uninstall it first or edit install.sh on line 211 (execute_script 'pipewire.sh')."
+    exit 1
+fi
+
+# Check if base-devel is installed
+if pacman -Q base-devel &> /dev/null; then
+    echo "base-devel is already installed."
+else
+    echo "$NOTE Install base-devel.........."
+
+    if sudo pacman -S --noconfirm --needed base-devel; then
+        echo "$OK base-devel has been installed successfully."
+    else
+        echo "$ERROR base-devel not found nor cannot be installed."
+        echo "$ACTION Please install base-devel manually before running this script... Exiting"
+        exit 1
+    fi
 fi
 
 clear
@@ -45,17 +79,6 @@ read -p "$(tput setaf 6)Would you like to Use Preset Settings (See note above)? 
 if [[ $use_preset = [Yy] ]]; then
   source ./preset.sh
 fi
-
-# Set some colors for output messages
-OK="$(tput setaf 2)[OK]$(tput sgr0)"
-ERROR="$(tput setaf 1)[ERROR]$(tput sgr0)"
-NOTE="$(tput setaf 3)[NOTE]$(tput sgr0)"
-WARN="$(tput setaf 166)[WARN]$(tput sgr0)"
-CAT="$(tput setaf 6)[ACTION]$(tput sgr0)"
-ORANGE=$(tput setaf 166)
-YELLOW=$(tput setaf 3)
-RESET=$(tput sgr0)
-
 
 # Function to colorize prompts
 colorize_prompt() {
@@ -172,12 +195,12 @@ printf "\n"
 
 # Ensuring all in the scripts folder are made executable
 chmod +x install-scripts/*
-sleep 0.5
+sleep 1
 # Ensuring base-devel is installed
 execute_script "00-base.sh"
-sleep 0.5
+sleep 1
 execute_script "pacman.sh"
-sleep 0.5
+sleep 1
 # Execute AUR helper script based on user choice
 if [ "$aur_helper" == "paru" ]; then
     execute_script "paru.sh"
@@ -186,7 +209,7 @@ elif [ "$aur_helper" == "yay" ]; then
 fi
 
 # Install hyprland packages
-execute_script "00-hypr-pkgs.sh"
+execute_script "01-hypr-pkgs.sh"
 
 # Install pipewire and pipewire-audio
 execute_script "pipewire.sh"
@@ -232,26 +255,38 @@ if [ "$rog" == "Y" ]; then
 fi
 
 if [ "$dots" == "Y" ]; then
-    execute_script "dotfiles.sh"
+    execute_script "dotfiles-main.sh"
 
 fi
 
+clear
 
-printf "\n${OK} Yey! Installation Completed.\n"
-printf "\n"
-sleep 2
-printf "\n${NOTE} You can start Hyprland by typing Hyprland (IF SDDM is not installed) (note the capital H!).\n"
-printf "\n"
-printf "\n${NOTE} It is highly recommended to reboot your system.\n\n"
+# final check essential packages if it is installed
+execute_script "02-Final-Check.sh"
 
-read -rp "${CAT} Would you like to reboot now? (y/n): " HYP
+printf "\n%.0s" {1..1}
 
-if [[ "$HYP" =~ ^[Yy]$ ]]; then
-    if [[ "$nvidia" == "Y" ]]; then
-        echo "${NOTE} NVIDIA GPU detected. Rebooting the system..."
+# Check if hyprland or hyprland-git is installed
+if pacman -Q hyprland &> /dev/null || pacman -Q hyprland-git &> /dev/null; then
+    printf "\n${OK} Hyprland is installed. However, some essential packages may not be installed Please see above!"
+    printf "\n${CAT} Ignore this message if it states 'All essential packages are installed.'\n"
+    sleep 2
+    printf "\n${NOTE} You can start Hyprland by typing 'Hyprland' (IF SDDM is not installed) (note the capital H!).\n"
+    printf "\n${NOTE} However, it is highly recommended to reboot your system.\n\n"
+
+    # Prompt user to reboot
+    read -rp "${CAT} Would you like to reboot now? (y/n): " HYP
+
+    # Check if the user answered 'y' or 'Y'
+    if [[ "$HYP" =~ ^[Yy]$ ]]; then
+        if [[ "$nvidia" == "Y" ]]; then
+            echo "${NOTE} NVIDIA GPU detected. Rebooting the system..."
+        fi
         systemctl reboot
-    else
-        systemctl reboot
-    fi    
+    fi
+else
+    # Print error message if neither package is installed
+    printf "\n${WARN} Hyprland failed to install. Please check 00_CHECK-time_installed.log and other files Install-Logs/ directory...\n\n"
+    exit 1
 fi
 

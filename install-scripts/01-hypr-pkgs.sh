@@ -12,69 +12,69 @@ Extra=(
 )
 
 hypr_package=( 
-aylurs-gtk-shell
-cliphist
-curl 
-grim 
-gvfs 
-gvfs-mtp
-hypridle
-hyprlock
-imagemagick
-inxi 
-jq
-kitty
-kvantum
-nano  
-network-manager-applet 
-pamixer 
-pavucontrol
-pipewire-alsa 
-playerctl
-polkit-gnome
-python-requests
-python-pyquery
-pyprland 
-qt5ct
-qt6ct
-qt6-svg
-rofi-wayland
-slurp 
-swappy 
-swaync 
-swww
-wallust-git 
-waybar
-wget
-wl-clipboard
-wlogout
-xdg-user-dirs
-xdg-utils 
-yad
+  aylurs-gtk-shell
+  cliphist
+  curl 
+  grim 
+  gvfs 
+  gvfs-mtp
+  imagemagick
+  inxi 
+  jq
+  kitty
+  kvantum
+  nano  
+  network-manager-applet 
+  pamixer 
+  pavucontrol
+  pipewire-alsa 
+  playerctl
+  polkit-gnome
+  python-requests
+  python-pyquery
+  qt5ct
+  qt6ct
+  qt6-svg
+  rofi-wayland
+  slurp 
+  swappy 
+  swaync 
+  swww
+  wallust 
+  waybar
+  wget
+  wl-clipboard
+  wlogout
+  xdg-user-dirs
+  xdg-utils 
+  yad
 )
 
 # the following packages can be deleted. however, dotfiles may not work properly
 hypr_package_2=(
-brightnessctl 
-btop
-cava
-eog
-fastfetch
-gnome-system-monitor
-mousepad 
-mpv
-mpv-mpris 
-nvtop
-nwg-look
-pacman-contrib
-vim
-yt-dlp
+  brightnessctl 
+  btop
+  cava
+  eog
+  fastfetch
+  gnome-system-monitor
+  mousepad 
+  mpv
+  mpv-mpris 
+  nvtop
+  nwg-look
+  pacman-contrib
+  qalculate-gtk
+  vim
+  yt-dlp
 )
 
-# List of packages to uninstall as it conflicts with swaync or causing swaync to not function properly
+# List of packages to uninstall as it conflicts with swaync and rofi-wayland
 uninstall=(
   dunst
   mako
+  rofi
+  wallust-git
 )
 
 ## WARNING: DO NOT EDIT BEYOND THIS LINE IF YOU DON'T KNOW WHAT YOU ARE DOING! ##
@@ -90,6 +90,23 @@ source "$(dirname "$(readlink -f "$0")")/Global_functions.sh"
 # Set the name of the log file to include the current date and time
 LOG="Install-Logs/install-$(date +%d-%H%M%S)_hypr-pkgs.log"
 
+# uninstalling conflicting packages
+# Initialize a variable to track overall errors
+overall_failed=0
+
+printf "\n%s - Removing Mako, Dunst, and rofi as they conflict with swaync and rofi-wayland \n" "${NOTE}"
+for PKG in "${uninstall[@]}"; do
+  uninstall_package "$PKG" 2>&1 | tee -a "$LOG"
+  if [ $? -ne 0 ]; then
+    # Track if any uninstallation failed
+    overall_failed=1
+  fi
+done
+
+if [ $overall_failed -ne 0 ]; then
+  echo -e "${ERROR} Some packages failed to uninstall. Please check the log."
+fi
+
 
 # Installation of main components
 printf "\n%s - Installing hyprland packages.... \n" "${NOTE}"
@@ -98,16 +115,6 @@ for PKG1 in "${hypr_package[@]}" "${hypr_package_2[@]}" "${Extra[@]}"; do
   install_package "$PKG1" 2>&1 | tee -a "$LOG"
   if [ $? -ne 0 ]; then
     echo -e "\e[1A\e[K${ERROR} - $PKG1 Package installation failed, Please check the installation logs"
-    exit 1
-  fi
-done
-
-# Checking if mako or dunst is installed
-printf "\n%s - Checking if mako or dunst are installed and removing for swaync to work properly \n" "${NOTE}"
-for PKG in "${uninstall[@]}"; do
-  uninstall_package "$PKG" 2>&1 | tee -a "$LOG"
-  if [ $? -ne 0 ]; then
-    echo -e "\e[1A\e[K${ERROR} - $PKG uninstallation failed, please check the log"
     exit 1
   fi
 done

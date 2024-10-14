@@ -1,5 +1,44 @@
 ## Changelogs
 
+## 20 Sep 2024
+- User will be ask if they want to set Thunar as default file manager if they decided to install it
+
+## 19 Sep 2024
+- Added fastfetch on tty. However, will be disabled if user decided to install pokemon colorscripts
+
+## 18 Sep 2024
+- dotfiles will now be downloaded from main or master branch instead of from the releases version.
+
+## 14 Sep 2024
+- remove the final error checks instead, introduced a final check of essential packages to ran Hyprland
+
+## 08 Sep 2024
+- Added final error checks on install-logs
+
+## 07 Sep 2024
+- added pulseaudio check
+- added sof-firmware
+
+## 29 Aug 2024
+- switched over to non-git wallust package
+- improved indentions on some install scripts
+
+## 28 Aug 2024
+- Added final check if hyprland is installed and will give an error to user
+
+## 26 Aug 2024
+- Set to uninstall rofi as conflicts with rofi-wayland
+- added nvidia_drm.fbdev=1 for grub
+
+## 14 Aug 2024
+- added archlinux-keyring on base.sh
+
+## 08 Aug 2024
+- Increased to 1 sec delay for installing base-devel [commit](https://github.com/JaKooLit/Arch-Hyprland/commit/7ebfa06c3b186f9bec0bcf268fae401ba67dfc2a)
+
+## 07 Jul 2024
+- added eza (ls replacement for tty). Note only on .zshrc
+
 ## 25 Jun 2024
 - added fbdev=1 for nvidia.sh on `/etc/modprobe.d/nvidia.conf`. see here `https://wiki.hyprland.org/Nvidia/#drm-kernel-mode-setting`
 
